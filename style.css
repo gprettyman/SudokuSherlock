@@ -1,0 +1,14 @@
+body{
+    background-color: #a9927d;
+}
+
+h1{
+    font-family: 'Lexend', Arial, sans-serif;
+    color: #524332;
+    margin: 0 0 0 0;
+}
+
+table, td {
+    border: thin solid #524332;
+    border-collapse: collapse;
+}
