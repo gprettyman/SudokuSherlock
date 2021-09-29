@@ -25,12 +25,13 @@ function getBoard() {
 // Function - Checks if the current row is valid
 // Returns - true if the value is not already in that row
 function rowChecker(board, row, value) {
-    if (board[row].includes(value) != true) {
-        return true;
+    var isValid = true;
+    for (let c = 0; c < 9; c++) {
+        if (board[row][c] == value) {
+            isValid = false;
+        }
     }
-    else {
-        return false;
-    }
+    return isValid;
 }
 
 
@@ -38,8 +39,8 @@ function rowChecker(board, row, value) {
 // Returns - true if the value is not already in that column
 function columnChecker(board, column, value) {
     var isValid = true;
-    for (let i = 0; i < 9; i++) {
-        if (board[i][column] == value) {
+    for (let r = 0; r < 9; r++) {
+        if (board[r][column] == value) {
             isValid = false;
         }
     }
@@ -83,9 +84,9 @@ function boxChecker(board, column, row, value) {
 }
 
 function validateBoard(board) {
-    for (let x = 0; x < 9; x++) {
-        for (let y = 0; y < 9; y++) {
-            if (board[y][x] == 0) {
+    for (let c = 0; c < 9; c++) {
+        for (let r = 0; r < 9; r++) {
+            if (board[r][c] == 0) {
                 return false
             }
         }
@@ -94,23 +95,27 @@ function validateBoard(board) {
 }
 
 
-// x and y represent the x,y coordinates of the value (ie. x is the column, y is the row)
+// c and r represent the column and row "coordinates" of the square
 // v represents the value (1-9) to be evaluated
 function boardSolver(board) {
-    for (let x = 0; x < 9; x++) {  // Runs through the columns
-        for (let y = 0; y < 9; y++) {   // Runs through the rows
-            if (board[y][x] == 0) {
+    for (let c = 0; c < 9; c++) {  // Runs through the columns
+        for (let r = 0; r < 9; r++) {   // Runs through the rows
+            if (board[r][c] == 0) {
                 for (let v = 1; v <= 9; v++) {   // Runs through the values 1-9
-                    if ((columnChecker(board, x, v) == true) && (rowChecker(board, y, v) == true) && (boxChecker(board, x, y, v) == true)) {
-                        board[y][x] = v;
+                    if (columnChecker(board, c, v) != true || rowChecker(board, r, v) != true || boxChecker(board, c, r, v) != true) {
+                        ; // Does nothing and moves on to next value if any of the checks are false
+                    }
+                    else{
+                        board[r][c] = v;
                         if (boardSolver(board) == true) {
                             return true;
                         }
                         else {
-                            board[y][x] = 0;
+                            board[r][c] = 0;
                         }
                     }
                 }
+                return false;
             }
         }
     }
@@ -120,17 +125,12 @@ function boardSolver(board) {
 // Main code body
 getBoard();
 boardSolver(inputBoard);
-if (validateBoard(inputBoard) != true) {
-    document.write("<h1>Invalid board - multiple solutions</h1>");
-}
-else {
-    document.write("<table>")
-    for (let y = 0; y < 9; y++) {
-        document.write("<tr>")
-        for (let x = 0; x < 9; x++) {
-            document.write("<td>" + "<h1>" + inputBoard[y][x] + "</h1>" + "<td>")
-        }
-        document.write("</tr>")
+document.write("<table>")
+for (let r = 0; r < 9; r++) {
+    document.write("<tr>")
+    for (let c = 0; c < 9; c++) {
+        document.write("<td>" + "<h1>" + inputBoard[r][c] + "</h1>" + "<td>")
     }
-    document.write("</table")
+    document.write("</tr>")
 }
+document.write("</table")
